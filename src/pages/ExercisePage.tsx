@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { SqlEditor } from '../components/SqlEditor';
 import { ResultsTable, ResultGrid } from '../components/ResultsTable';
 import { SchemaReference } from '../components/SchemaReference';
 import { EXERCISES, getExercise, type Difficulty } from '../content/exercises';
+import { exercisesListPath } from './ExercisesPage';
 import { useDatabase } from '../db/DatabaseProvider';
 import type { RunOutcome } from '../lib/sqlEngine';
 import { checkAnswer, type CheckResult } from '../lib/check';
@@ -14,6 +15,12 @@ const diffStyles: Record<Difficulty, string> = {
   'Trung bình': 'bg-amber-100 text-amber-700',
   Khó: 'bg-rose-100 text-rose-700',
 };
+
+function readListSearch(state: unknown): string {
+  if (!state || typeof state !== 'object' || !('listSearch' in state)) return '';
+  const value = (state as { listSearch: unknown }).listSearch;
+  return typeof value === 'string' ? value : '';
+}
 
 export default function ExercisePage() {
   const { id } = useParams();
@@ -28,6 +35,10 @@ export default function ExercisePage() {
   const [showSolution, setShowSolution] = useState(false);
 
   const index = useMemo(() => EXERCISES.findIndex((e) => e.id === id), [id]);
+  const location = useLocation();
+  const listSearch = readListSearch(location.state);
+  const backToList =
+    listSearch.length > 0 ? `/exercises?${listSearch}` : exercisesListPath(index);
 
   useEffect(() => {
     setSql(exercise?.starterSql ?? '');
@@ -42,7 +53,7 @@ export default function ExercisePage() {
       <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
         <p className="text-slate-600">Không tìm thấy bài tập này.</p>
         <Link
-          to="/exercises"
+          to={backToList}
           className="mt-3 inline-block text-indigo-600 hover:underline"
         >
           ← Về danh sách bài tập
@@ -85,7 +96,10 @@ export default function ExercisePage() {
 
   return (
     <div>
-      <Link to="/exercises" className="text-sm text-indigo-600 hover:underline">
+      <Link
+        to={backToList}
+        className="text-sm text-indigo-600 hover:underline"
+      >
         ← Danh sách bài tập
       </Link>
 
@@ -213,6 +227,7 @@ export default function ExercisePage() {
             {prev ? (
               <Link
                 to={`/exercises/${prev.id}`}
+                state={{ listSearch }}
                 className="text-sm text-slate-600 hover:text-indigo-600"
               >
                 ← {prev.title}
@@ -223,6 +238,7 @@ export default function ExercisePage() {
             {next ? (
               <Link
                 to={`/exercises/${next.id}`}
+                state={{ listSearch }}
                 className="text-sm text-slate-600 hover:text-indigo-600"
               >
                 {next.title} →

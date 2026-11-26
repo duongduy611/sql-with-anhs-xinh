@@ -1,5 +1,7 @@
-import { NavLink, Outlet, Link } from 'react-router-dom';
+import { useLayoutEffect } from 'react';
+import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
 import { useDatabase } from '../db/DatabaseProvider';
+import { HeartIcon } from './HeartIcon';
 
 function Logo() {
   return (
@@ -53,6 +55,14 @@ function DatabaseStatus() {
 }
 
 export function Layout() {
+  const { key } = useLocation();
+
+  useLayoutEffect(() => {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+  }, [key]);
+
   return (
     <div className="flex min-h-full flex-col">
       <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
@@ -62,7 +72,7 @@ export function Layout() {
             className="flex items-center gap-2 text-lg font-bold text-slate-800"
           >
             <Logo />
-            Học SQL cùng Ánh Xinh
+            Học SQL cùng Ánh Xinh <HeartIcon className="text-rose-500" />
           </Link>
           <nav className="flex items-center gap-1">
             <NavLink to="/" end className={navClass}>
@@ -87,7 +97,8 @@ export function Layout() {
       </main>
 
       <footer className="border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-        SQL cùng Ánh Xinh · Học &amp; luyện SQL ngay trên trình duyệt với SQLite
+        Học SQL cùng Ánh Xinh <HeartIcon className="text-rose-500" /> · Luyện SQL
+        ngay trên trình duyệt với SQLite
         (sql.js)
       </footer>
     </div>

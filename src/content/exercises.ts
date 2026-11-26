@@ -12,7 +12,13 @@ export interface Exercise {
   hint?: string;
 }
 
-export const EXERCISES: Exercise[] = [
+const difficultyRank: Record<Difficulty, number> = {
+  Dễ: 0,
+  'Trung bình': 1,
+  Khó: 2,
+};
+
+const exerciseBank: Exercise[] = [
   {
     id: 'e01',
     title: 'Danh sách tài khoản',
@@ -179,7 +185,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Dễ',
     topic: 'SELECT *',
     prompt: 'Lấy tất cả các cột của mọi chi nhánh trong bảng branches.',
-    starterSql: 'SELECT *\nFROM branches;',
+    starterSql: 'SELECT ...\nFROM branches;',
     solutionSql: 'SELECT * FROM branches',
     orderMatters: false,
     hint: 'Dùng dấu * để lấy mọi cột.',
@@ -481,7 +487,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Dễ',
     topic: 'COUNT',
     prompt: 'Đếm tổng số tài khoản, đặt tên cột kết quả là so_tk.',
-    starterSql: 'SELECT COUNT(*) AS so_tk\nFROM accounts;',
+    starterSql: 'SELECT ... AS so_tk\nFROM accounts;',
     solutionSql: 'SELECT COUNT(*) AS so_tk FROM accounts',
     orderMatters: false,
     hint: 'COUNT(*) AS so_tk.',
@@ -492,7 +498,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Dễ',
     topic: 'SUM',
     prompt: 'Tính tổng số dư của tất cả tài khoản, đặt tên cột là tong.',
-    starterSql: 'SELECT SUM(balance) AS tong\nFROM accounts;',
+    starterSql: 'SELECT ... AS tong\nFROM accounts;',
     solutionSql: 'SELECT SUM(balance) AS tong FROM accounts',
     orderMatters: false,
     hint: 'SUM(balance).',
@@ -503,7 +509,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Dễ',
     topic: 'AVG',
     prompt: 'Tính số dư trung bình của các tài khoản, đặt tên cột là tb.',
-    starterSql: 'SELECT AVG(balance) AS tb\nFROM accounts;',
+    starterSql: 'SELECT ... AS tb\nFROM accounts;',
     solutionSql: 'SELECT AVG(balance) AS tb FROM accounts',
     orderMatters: false,
     hint: 'AVG(balance).',
@@ -514,7 +520,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Dễ',
     topic: 'MIN · MAX',
     prompt: 'Lấy số dư cao nhất (cao_nhat) và thấp nhất (thap_nhat) trong bảng accounts.',
-    starterSql: 'SELECT MAX(balance) AS cao_nhat, MIN(balance) AS thap_nhat\nFROM accounts;',
+    starterSql: 'SELECT ... AS cao_nhat, ... AS thap_nhat\nFROM accounts;',
     solutionSql: 'SELECT MAX(balance) AS cao_nhat, MIN(balance) AS thap_nhat FROM accounts',
     orderMatters: false,
     hint: 'Dùng MAX và MIN.',
@@ -525,7 +531,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Dễ',
     topic: 'COUNT DISTINCT',
     prompt: 'Đếm số thành phố khác nhau mà khách hàng đang sinh sống, đặt tên cột là so_tp.',
-    starterSql: 'SELECT COUNT(DISTINCT city) AS so_tp\nFROM customers;',
+    starterSql: 'SELECT ... AS so_tp\nFROM customers;',
     solutionSql: 'SELECT COUNT(DISTINCT city) AS so_tp FROM customers',
     orderMatters: false,
     hint: 'COUNT(DISTINCT city).',
@@ -559,7 +565,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'AS',
     prompt:
       'Lấy account_number (bí danh so_tk) và balance (bí danh so_du) của tất cả tài khoản.',
-    starterSql: 'SELECT account_number AS so_tk, balance AS so_du\nFROM accounts;',
+    starterSql: 'SELECT ... AS so_tk, ... AS so_du\nFROM accounts;',
     solutionSql: 'SELECT account_number AS so_tk, balance AS so_du FROM accounts',
     orderMatters: false,
     hint: 'Dùng AS để đổi tên cột hiển thị.',
@@ -571,7 +577,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Biểu thức',
     prompt:
       'Lấy account_number và số dư quy đổi ra triệu đồng (balance / 1000000) với bí danh so_du_trieu.',
-    starterSql: 'SELECT account_number, balance / 1000000 AS so_du_trieu\nFROM accounts;',
+    starterSql: 'SELECT account_number, ... AS so_du_trieu\nFROM accounts;',
     solutionSql: 'SELECT account_number, balance / 1000000 AS so_du_trieu FROM accounts',
     orderMatters: false,
     hint: 'Thực hiện phép chia ngay trong SELECT.',
@@ -604,7 +610,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Dễ',
     topic: 'WHERE',
     prompt: 'Lấy account_number và balance của các tài khoản có số dư âm (balance < 0).',
-    starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE balance < 0;',
+    starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE ...;',
     solutionSql: 'SELECT account_number, balance FROM accounts WHERE balance < 0',
     orderMatters: false,
     hint: 'balance < 0.',
@@ -875,7 +881,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'CASE · SUM',
     prompt:
       "Đếm số tài khoản đang hoạt động (dang_hoat_dong, status = 'ACTIVE') và số tài khoản khác (khac) trong một dòng.",
-    starterSql: "SELECT SUM(CASE WHEN status = 'ACTIVE' THEN 1 ELSE 0 END) AS dang_hoat_dong,\n       SUM(CASE WHEN status <> 'ACTIVE' THEN 1 ELSE 0 END) AS khac\nFROM accounts;",
+    starterSql: 'SELECT ... AS dang_hoat_dong,\n       ... AS khac\nFROM accounts;',
     solutionSql: "SELECT SUM(CASE WHEN status = 'ACTIVE' THEN 1 ELSE 0 END) AS dang_hoat_dong, SUM(CASE WHEN status <> 'ACTIVE' THEN 1 ELSE 0 END) AS khac FROM accounts",
     orderMatters: false,
     hint: 'Dùng SUM(CASE WHEN ... THEN 1 ELSE 0 END).',
@@ -887,7 +893,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Nối chuỗi',
     prompt:
       "Với mỗi khách hàng, tạo cột thong_tin có dạng 'Họ tên - Thành phố' (dùng toán tử ||).",
-    starterSql: "SELECT full_name || ' - ' || city AS thong_tin\nFROM customers;",
+    starterSql: 'SELECT ... AS thong_tin\nFROM customers;',
     solutionSql: "SELECT full_name || ' - ' || city AS thong_tin FROM customers",
     orderMatters: false,
     hint: "Dùng full_name || ' - ' || city.",
@@ -899,7 +905,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'IFNULL',
     prompt:
       "Hiển thị full_name và email; nếu email NULL thì thay bằng 'chưa có' (dùng IFNULL). Đặt tên cột là email.",
-    starterSql: "SELECT full_name, IFNULL(email, 'chưa có') AS email\nFROM customers;",
+    starterSql: 'SELECT full_name, ... AS email\nFROM customers;',
     solutionSql: "SELECT full_name, IFNULL(email, 'chưa có') AS email FROM customers",
     orderMatters: false,
     hint: "IFNULL(email, 'chưa có').",
@@ -935,7 +941,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Subquery',
     prompt:
       'Tìm account_number và balance của các tài khoản có số dư lớn hơn số dư trung bình toàn hệ thống.',
-    starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE balance > (SELECT AVG(balance) FROM accounts);',
+    starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE ...;',
     solutionSql: 'SELECT account_number, balance FROM accounts WHERE balance > (SELECT AVG(balance) FROM accounts)',
     orderMatters: false,
     hint: 'So sánh với (SELECT AVG(balance) FROM accounts).',
@@ -947,7 +953,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Subquery',
     prompt:
       'Tìm account_number và balance của tài khoản có số dư cao nhất (dùng truy vấn con với MAX).',
-    starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE balance = (SELECT MAX(balance) FROM accounts);',
+    starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE ...;',
     solutionSql: 'SELECT account_number, balance FROM accounts WHERE balance = (SELECT MAX(balance) FROM accounts)',
     orderMatters: false,
     hint: 'balance = (SELECT MAX(balance) FROM accounts).',
@@ -983,7 +989,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'JOIN · WHERE · GROUP BY',
     prompt:
       "Tính tổng principal của khoản vay 'ACTIVE' theo branch_name. Hiển thị branch_name và tong.",
-    starterSql: "SELECT b.branch_name, SUM(l.principal) AS tong\nFROM loans l\nJOIN branches b ON ...\nWHERE l.status = 'ACTIVE'\nGROUP BY b.branch_name;",
+    starterSql: 'SELECT b.branch_name, SUM(l.principal) AS tong\nFROM loans l\nJOIN branches b ON ...\nWHERE ...\nGROUP BY b.branch_name;',
     solutionSql: "SELECT b.branch_name, SUM(l.principal) AS tong FROM loans l JOIN branches b ON b.branch_id = l.branch_id WHERE l.status = 'ACTIVE' GROUP BY b.branch_name",
     orderMatters: false,
     hint: "WHERE l.status = 'ACTIVE' rồi GROUP BY.",
@@ -1019,7 +1025,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Khó',
     topic: 'Subquery · NOT IN',
     prompt: 'Tìm full_name của khách hàng chưa có khoản vay nào (không xuất hiện trong loans).',
-    starterSql: 'SELECT full_name\nFROM customers\nWHERE customer_id NOT IN (SELECT customer_id FROM loans);',
+    starterSql: 'SELECT full_name\nFROM customers\nWHERE ...;',
     solutionSql: 'SELECT full_name FROM customers WHERE customer_id NOT IN (SELECT customer_id FROM loans)',
     orderMatters: false,
     hint: 'NOT IN (SELECT customer_id FROM loans).',
@@ -1030,7 +1036,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Khó',
     topic: 'NOT EXISTS',
     prompt: 'Tìm account_number của các tài khoản chưa có thẻ nào (dùng NOT EXISTS).',
-    starterSql: 'SELECT account_number\nFROM accounts a\nWHERE NOT EXISTS (SELECT 1 FROM cards c WHERE c.account_id = a.account_id);',
+    starterSql: 'SELECT account_number\nFROM accounts a\nWHERE ...;',
     solutionSql: 'SELECT account_number FROM accounts a WHERE NOT EXISTS (SELECT 1 FROM cards c WHERE c.account_id = a.account_id)',
     orderMatters: false,
     hint: 'NOT EXISTS với điều kiện c.account_id = a.account_id.',
@@ -1042,7 +1048,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Subquery · IN',
     prompt:
       'Tìm full_name của khách hàng vừa có tài khoản vừa có khoản vay.',
-    starterSql: 'SELECT full_name\nFROM customers\nWHERE customer_id IN (SELECT customer_id FROM accounts)\n  AND customer_id IN (SELECT customer_id FROM loans);',
+    starterSql: 'SELECT full_name\nFROM customers\nWHERE ...;',
     solutionSql: 'SELECT full_name FROM customers WHERE customer_id IN (SELECT customer_id FROM accounts) AND customer_id IN (SELECT customer_id FROM loans)',
     orderMatters: false,
     hint: 'Kết hợp hai điều kiện IN bằng AND.',
@@ -1054,7 +1060,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'JOIN · GROUP BY · LIMIT',
     prompt:
       'Tìm chi nhánh có tổng số dư lớn nhất. Hiển thị branch_name và tong, chỉ 1 dòng.',
-    starterSql: 'SELECT b.branch_name, SUM(a.balance) AS tong\nFROM accounts a\nJOIN branches b ON ...\nGROUP BY b.branch_name\nORDER BY tong DESC\nLIMIT 1;',
+    starterSql: 'SELECT b.branch_name, SUM(a.balance) AS tong\nFROM accounts a\nJOIN branches b ON ...\nGROUP BY b.branch_name\nORDER BY ...\nLIMIT 1;',
     solutionSql: 'SELECT b.branch_name, SUM(a.balance) AS tong FROM accounts a JOIN branches b ON b.branch_id = a.branch_id GROUP BY b.branch_name ORDER BY tong DESC LIMIT 1',
     orderMatters: true,
     hint: 'GROUP BY, ORDER BY tong DESC, LIMIT 1.',
@@ -1066,7 +1072,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'ORDER BY · LIMIT',
     prompt:
       'Tìm 5 giao dịch có số tiền lớn nhất. Hiển thị txn_id và amount, giảm dần. (Thứ tự được chấm.)',
-    starterSql: 'SELECT txn_id, amount\nFROM transactions\nORDER BY amount DESC\nLIMIT 5;',
+    starterSql: 'SELECT txn_id, amount\nFROM transactions\nORDER BY ...\nLIMIT 5;',
     solutionSql: 'SELECT txn_id, amount FROM transactions ORDER BY amount DESC LIMIT 5',
     orderMatters: true,
     hint: 'ORDER BY amount DESC LIMIT 5.',
@@ -1078,7 +1084,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Subquery tương quan',
     prompt:
       'Tìm các tài khoản có số dư lớn hơn số dư trung bình CỦA CHÍNH LOẠI tài khoản đó. Hiển thị account_number, account_type, balance.',
-    starterSql: 'SELECT account_number, account_type, balance\nFROM accounts a\nWHERE balance > (SELECT AVG(balance) FROM accounts a2 WHERE a2.account_type = a.account_type);',
+    starterSql: 'SELECT account_number, account_type, balance\nFROM accounts a\nWHERE ...;',
     solutionSql: 'SELECT account_number, account_type, balance FROM accounts a WHERE balance > (SELECT AVG(balance) FROM accounts a2 WHERE a2.account_type = a.account_type)',
     orderMatters: false,
     hint: 'Truy vấn con tương quan: a2.account_type = a.account_type.',
@@ -1102,7 +1108,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Self JOIN',
     prompt:
       'Hiển thị tên nhân viên (nhan_vien) và tên người quản lý của họ (quan_ly). Chỉ lấy nhân viên CÓ quản lý. Dùng self-join trên employees.',
-    starterSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly\nFROM employees e\nJOIN employees m ON m.employee_id = e.manager_id;',
+    starterSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly\nFROM employees e\nJOIN employees m ON ...;',
     solutionSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly FROM employees e JOIN employees m ON m.employee_id = e.manager_id',
     orderMatters: false,
     hint: 'JOIN employees với chính nó: m.employee_id = e.manager_id.',
@@ -1114,7 +1120,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'LEFT JOIN',
     prompt:
       'Hiển thị mọi nhân viên (nhan_vien) kèm tên quản lý (quan_ly); nhân viên không có quản lý vẫn xuất hiện (quan_ly = NULL). Dùng LEFT JOIN.',
-    starterSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly\nFROM employees e\nLEFT JOIN employees m ON m.employee_id = e.manager_id;',
+    starterSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly\nFROM employees e\nLEFT JOIN employees m ON ...;',
     solutionSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly FROM employees e LEFT JOIN employees m ON m.employee_id = e.manager_id',
     orderMatters: false,
     hint: 'LEFT JOIN giữ lại cả nhân viên không có quản lý.',
@@ -1126,7 +1132,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'CTE (WITH)',
     prompt:
       'Dùng CTE tính tổng số dư mỗi chi nhánh, rồi lấy các chi nhánh có tổng số dư lớn hơn trung bình tổng số dư của các chi nhánh. Hiển thị branch_name và tong.',
-    starterSql: 'WITH bt AS (\n  SELECT b.branch_name AS branch_name, SUM(a.balance) AS tong\n  FROM accounts a JOIN branches b ON b.branch_id = a.branch_id\n  GROUP BY b.branch_name\n)\nSELECT branch_name, tong FROM bt WHERE tong > (SELECT AVG(tong) FROM bt);',
+    starterSql: 'WITH bt AS (\n  ...\n)\nSELECT branch_name, tong\nFROM bt\nWHERE ...;',
     solutionSql: 'WITH bt AS (SELECT b.branch_name AS branch_name, SUM(a.balance) AS tong FROM accounts a JOIN branches b ON b.branch_id = a.branch_id GROUP BY b.branch_name) SELECT branch_name, tong FROM bt WHERE tong > (SELECT AVG(tong) FROM bt)',
     orderMatters: false,
     hint: 'Định nghĩa CTE bt rồi so sánh với AVG(tong) của chính bt.',
@@ -1138,7 +1144,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Window · ROW_NUMBER',
     prompt:
       'Hiển thị account_number, balance và thứ hạng hang (1 là cao nhất) dựa trên số dư giảm dần. Dùng ROW_NUMBER().',
-    starterSql: 'SELECT account_number, balance,\n       ROW_NUMBER() OVER (ORDER BY balance DESC) AS hang\nFROM accounts;',
+    starterSql: 'SELECT account_number, balance,\n       ROW_NUMBER() OVER (...) AS hang\nFROM accounts;',
     solutionSql: 'SELECT account_number, balance, ROW_NUMBER() OVER (ORDER BY balance DESC) AS hang FROM accounts',
     orderMatters: false,
     hint: 'ROW_NUMBER() OVER (ORDER BY balance DESC).',
@@ -1150,7 +1156,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Window · PARTITION',
     prompt:
       'Với mỗi tài khoản hiển thị account_number, account_type, balance và hang là thứ hạng số dư GIẢM DẦN TRONG TỪNG account_type. Dùng RANK() OVER (PARTITION BY ...).',
-    starterSql: 'SELECT account_number, account_type, balance,\n       RANK() OVER (PARTITION BY account_type ORDER BY balance DESC) AS hang\nFROM accounts;',
+    starterSql: 'SELECT account_number, account_type, balance,\n       RANK() OVER (...) AS hang\nFROM accounts;',
     solutionSql: 'SELECT account_number, account_type, balance, RANK() OVER (PARTITION BY account_type ORDER BY balance DESC) AS hang FROM accounts',
     orderMatters: false,
     hint: 'RANK() OVER (PARTITION BY account_type ORDER BY balance DESC).',
@@ -1162,7 +1168,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Window · SUM',
     prompt:
       'Với các giao dịch của account_id = 1, hiển thị txn_id, txn_date, amount và luy_ke là tổng dồn của amount theo thứ tự ngày rồi txn_id. Dùng SUM() OVER.',
-    starterSql: 'SELECT txn_id, txn_date, amount,\n       SUM(amount) OVER (ORDER BY txn_date, txn_id) AS luy_ke\nFROM transactions\nWHERE account_id = 1;',
+    starterSql: 'SELECT txn_id, txn_date, amount,\n       ... AS luy_ke\nFROM transactions\nWHERE ...;',
     solutionSql: 'SELECT txn_id, txn_date, amount, SUM(amount) OVER (ORDER BY txn_date, txn_id) AS luy_ke FROM transactions WHERE account_id = 1',
     orderMatters: false,
     hint: 'SUM(amount) OVER (ORDER BY txn_date, txn_id).',
@@ -1174,7 +1180,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'WHERE · ORDER BY · LIMIT',
     prompt:
       "Tìm 5 tài khoản VND (currency = 'VND') có số dư cao nhất. Hiển thị account_number và balance, giảm dần. (Thứ tự được chấm.)",
-    starterSql: "SELECT account_number, balance\nFROM accounts\nWHERE currency = 'VND'\nORDER BY balance DESC\nLIMIT 5;",
+    starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE ...\nORDER BY ...\nLIMIT 5;',
     solutionSql: "SELECT account_number, balance FROM accounts WHERE currency = 'VND' ORDER BY balance DESC LIMIT 5",
     orderMatters: true,
     hint: "Lọc currency = 'VND' trước, rồi ORDER BY balance DESC LIMIT 5.",
@@ -1186,7 +1192,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'UNION',
     prompt:
       'Lấy danh sách tất cả thành phố xuất hiện ở customers HOẶC branches, không trùng lặp. Dùng UNION.',
-    starterSql: 'SELECT city FROM customers\nUNION\nSELECT city FROM branches;',
+    starterSql: 'SELECT ...\nUNION\nSELECT ...;',
     solutionSql: 'SELECT city FROM customers UNION SELECT city FROM branches',
     orderMatters: false,
     hint: 'UNION tự loại trùng giữa hai tập kết quả.',
@@ -1198,7 +1204,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Subquery',
     prompt:
       'Tìm txn_id và amount của các giao dịch có số tiền lớn hơn số tiền trung bình của tất cả giao dịch.',
-    starterSql: 'SELECT txn_id, amount\nFROM transactions\nWHERE amount > (SELECT AVG(amount) FROM transactions);',
+    starterSql: 'SELECT txn_id, amount\nFROM transactions\nWHERE ...;',
     solutionSql: 'SELECT txn_id, amount FROM transactions WHERE amount > (SELECT AVG(amount) FROM transactions)',
     orderMatters: false,
     hint: 'So sánh amount với (SELECT AVG(amount) FROM transactions).',
@@ -1222,7 +1228,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'JOIN · CASE · GROUP BY',
     prompt:
       "Theo từng chi nhánh, đếm tổng số tài khoản (tong_tk) và số tài khoản đang hoạt động (tk_hoat_dong, status = 'ACTIVE'). Hiển thị branch_name, tong_tk, tk_hoat_dong.",
-    starterSql: "SELECT b.branch_name, COUNT(*) AS tong_tk,\n       SUM(CASE WHEN a.status = 'ACTIVE' THEN 1 ELSE 0 END) AS tk_hoat_dong\nFROM accounts a\nJOIN branches b ON ...\nGROUP BY b.branch_name;",
+    starterSql: 'SELECT b.branch_name, COUNT(*) AS tong_tk,\n       ... AS tk_hoat_dong\nFROM accounts a\nJOIN branches b ON ...\nGROUP BY b.branch_name;',
     solutionSql: "SELECT b.branch_name, COUNT(*) AS tong_tk, SUM(CASE WHEN a.status = 'ACTIVE' THEN 1 ELSE 0 END) AS tk_hoat_dong FROM accounts a JOIN branches b ON b.branch_id = a.branch_id GROUP BY b.branch_name",
     orderMatters: false,
     hint: 'Kết hợp COUNT(*) và SUM(CASE WHEN ...).',
@@ -1234,7 +1240,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'Subquery',
     prompt:
       'Tìm loan_id, loan_type, interest_rate của các khoản vay có lãi suất cao hơn lãi suất trung bình của tất cả khoản vay.',
-    starterSql: 'SELECT loan_id, loan_type, interest_rate\nFROM loans\nWHERE interest_rate > (SELECT AVG(interest_rate) FROM loans);',
+    starterSql: 'SELECT loan_id, loan_type, interest_rate\nFROM loans\nWHERE ...;',
     solutionSql: 'SELECT loan_id, loan_type, interest_rate FROM loans WHERE interest_rate > (SELECT AVG(interest_rate) FROM loans)',
     orderMatters: false,
     hint: 'So sánh với (SELECT AVG(interest_rate) FROM loans).',
@@ -1270,7 +1276,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'JOIN · GROUP BY · ORDER BY',
     prompt:
       'Thống kê số giao dịch của mỗi tài khoản, sắp xếp giảm dần theo số giao dịch, nếu bằng nhau thì theo account_number tăng dần. Hiển thị account_number và so_gd. (Thứ tự được chấm.)',
-    starterSql: 'SELECT a.account_number, COUNT(*) AS so_gd\nFROM transactions t\nJOIN accounts a ON ...\nGROUP BY a.account_number\nORDER BY so_gd DESC, a.account_number ASC;',
+    starterSql: 'SELECT a.account_number, COUNT(*) AS so_gd\nFROM transactions t\nJOIN accounts a ON ...\nGROUP BY a.account_number\nORDER BY ...;',
     solutionSql: 'SELECT a.account_number, COUNT(*) AS so_gd FROM transactions t JOIN accounts a ON a.account_id = t.account_id GROUP BY a.account_number ORDER BY so_gd DESC, a.account_number ASC',
     orderMatters: true,
     hint: 'ORDER BY so_gd DESC, a.account_number ASC.',
@@ -1281,7 +1287,7 @@ export const EXERCISES: Exercise[] = [
     difficulty: 'Khó',
     topic: 'Subquery · NOT IN',
     prompt: 'Tìm branch_name của các chi nhánh chưa phát sinh khoản vay nào.',
-    starterSql: 'SELECT branch_name\nFROM branches\nWHERE branch_id NOT IN (SELECT branch_id FROM loans);',
+    starterSql: 'SELECT branch_name\nFROM branches\nWHERE ...;',
     solutionSql: 'SELECT branch_name FROM branches WHERE branch_id NOT IN (SELECT branch_id FROM loans)',
     orderMatters: false,
     hint: 'NOT IN (SELECT branch_id FROM loans).',
@@ -1293,7 +1299,7 @@ export const EXERCISES: Exercise[] = [
     topic: 'NOT EXISTS · JOIN',
     prompt:
       "Tìm full_name của khách hàng CHƯA TỪNG có giao dịch rút tiền (txn_type = 'WITHDRAWAL') trên bất kỳ tài khoản nào của họ. Dùng NOT EXISTS.",
-    starterSql: "SELECT c.full_name\nFROM customers c\nWHERE NOT EXISTS (\n  SELECT 1 FROM accounts a JOIN transactions t ON t.account_id = a.account_id\n  WHERE a.customer_id = c.customer_id AND t.txn_type = 'WITHDRAWAL'\n);",
+    starterSql: 'SELECT c.full_name\nFROM customers c\nWHERE ...;',
     solutionSql: "SELECT c.full_name FROM customers c WHERE NOT EXISTS (SELECT 1 FROM accounts a JOIN transactions t ON t.account_id = a.account_id WHERE a.customer_id = c.customer_id AND t.txn_type = 'WITHDRAWAL')",
     orderMatters: false,
     hint: 'NOT EXISTS với truy vấn con nối accounts và transactions theo customer_id.',
@@ -1305,12 +1311,17 @@ export const EXERCISES: Exercise[] = [
     topic: 'Subquery vô hướng',
     prompt:
       'Tạo một dòng báo cáo gồm: tổng số khách hàng (so_kh), tổng số tài khoản (so_tk) và tổng số dư toàn hệ thống (tong_so_du). Dùng các truy vấn con vô hướng.',
-    starterSql: 'SELECT (SELECT COUNT(*) FROM customers) AS so_kh,\n       (SELECT COUNT(*) FROM accounts) AS so_tk,\n       (SELECT SUM(balance) FROM accounts) AS tong_so_du;',
+    starterSql: 'SELECT ... AS so_kh,\n       ... AS so_tk,\n       ... AS tong_so_du;',
     solutionSql: 'SELECT (SELECT COUNT(*) FROM customers) AS so_kh, (SELECT COUNT(*) FROM accounts) AS so_tk, (SELECT SUM(balance) FROM accounts) AS tong_so_du',
     orderMatters: false,
     hint: 'Mỗi giá trị là một truy vấn con vô hướng trong SELECT.',
   },
 ];
+
+/** Dễ → Trung bình → Khó. Cùng mức giữ nguyên thứ tự khai báo. */
+export const EXERCISES: Exercise[] = [...exerciseBank].sort(
+  (a, b) => difficultyRank[a.difficulty] - difficultyRank[b.difficulty],
+);
 
 export function getExercise(id: string): Exercise | undefined {
   return EXERCISES.find((e) => e.id === id);

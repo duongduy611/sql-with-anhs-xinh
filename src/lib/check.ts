@@ -104,7 +104,7 @@ export async function checkAnswer(
 
   return {
     correct: cmp.ok,
-    message: cmp.ok ? 'Chính xác! Làm tốt lắm 🎉' : cmp.reason ?? 'Chưa đúng.',
+    message: cmp.ok ? 'Chính xác! Ánh Xinh ❤ làm tốt lắm 🎉' : cmp.reason ?? 'Chưa đúng.',
     userResult: last(userRun.results) ?? null,
     expectedResult: last(expectedRun.results) ?? null,
   };

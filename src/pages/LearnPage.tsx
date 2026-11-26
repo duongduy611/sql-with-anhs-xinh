@@ -13,7 +13,8 @@ export default function LearnPage() {
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-slate-800">Bài học SQL</h1>
         <p className="mt-1 text-slate-500">
-          Lộ trình từ cơ bản đến nâng cao. Mỗi bài đều có ví dụ chạy trực tiếp.
+          Lộ trình từ cơ bản đến nâng cao, dạy đủ các lệnh trước khi chúng
+          xuất hiện trong bài tập. Mỗi bài có ví dụ chạy trực tiếp.
         </p>
       </header>
 

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { HeartIcon } from '../components/HeartIcon';
 import { RunnableQuery } from '../components/RunnableQuery';
 import { LESSONS } from '../content/lessons';
 import { EXERCISES } from '../content/exercises';
@@ -40,12 +41,13 @@ export default function HomePage() {
             Chạy SQL thật ngay trên trình duyệt · Dữ liệu nghiệp vụ ngân hàng
           </span>
           <h1 className="mt-4 text-4xl font-bold leading-tight sm:text-5xl">
-            Học &amp; luyện tập SQL ngân hàng
+            Học SQL cùng Ánh Xinh <HeartIcon className="text-rose-200" />
           </h1>
           <p className="mt-4 text-lg text-indigo-100">
-            Đọc bài học ngắn gọn, thử truy vấn trực tiếp trên cơ sở dữ liệu ngân
-            hàng mẫu (khách hàng, tài khoản, giao dịch, thẻ, khoản vay) và tự
-            chấm điểm với các bài tập từ dễ đến khó — không cần cài đặt gì.
+            Đọc bài giảng có ví dụ chạy được, thử truy vấn trực tiếp trên cơ sở
+            dữ liệu ngân hàng mẫu (khách hàng, tài khoản, giao dịch, thẻ, khoản
+            vay) và tự chấm điểm với các bài tập từ dễ đến khó — không cần cài
+            đặt gì.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
@@ -69,7 +71,7 @@ export default function HomePage() {
           to="/learn"
           icon="📘"
           title="Bài học"
-          desc={`${LESSONS.length} bài học từ SELECT cơ bản đến JOIN, GROUP BY và truy vấn con, kèm ví dụ chạy được ngay.`}
+          desc={`${LESSONS.length} bài giảng từ SELECT đến JOIN, truy vấn con, CTE và hàm cửa sổ — đủ các lệnh dùng trong bài tập, kèm ví dụ chạy được ngay.`}
           cta="Xem bài học"
         />
         <FeatureCard
