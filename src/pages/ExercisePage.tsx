@@ -27,11 +27,12 @@ export default function ExercisePage() {
   const exercise = id ? getExercise(id) : undefined;
   const { run, ready } = useDatabase();
 
-  const [sql, setSql] = useState(exercise?.starterSql ?? '');
+  const [sql, setSql] = useState('');
   const [outcome, setOutcome] = useState<RunOutcome | null>(null);
   const [checking, setChecking] = useState(false);
   const [check, setCheck] = useState<CheckResult | null>(null);
   const [showHint, setShowHint] = useState(false);
+  const [showFrame, setShowFrame] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
 
   const index = useMemo(() => EXERCISES.findIndex((e) => e.id === id), [id]);
@@ -41,12 +42,13 @@ export default function ExercisePage() {
     listSearch.length > 0 ? `/exercises?${listSearch}` : exercisesListPath(index);
 
   useEffect(() => {
-    setSql(exercise?.starterSql ?? '');
+    setSql('');
     setOutcome(null);
     setCheck(null);
     setShowHint(false);
+    setShowFrame(false);
     setShowSolution(false);
-  }, [id, exercise?.starterSql]);
+  }, [id]);
 
   if (!exercise) {
     return (
@@ -150,7 +152,12 @@ export default function ExercisePage() {
               ▶ Chạy thử
             </button>
             <button
-              onClick={() => setShowHint((v) => !v)}
+              onClick={() =>
+                setShowHint((open) => {
+                  if (open) setShowFrame(false);
+                  return !open;
+                })
+              }
               className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
             >
               💡 Gợi ý
@@ -163,10 +170,39 @@ export default function ExercisePage() {
             </button>
           </div>
 
-          {showHint && exercise.hint && (
+          {showHint && (
             <div className="rounded-lg border-l-4 border-amber-400 bg-amber-50 px-4 py-3 text-sm text-slate-700">
-              <span className="font-semibold text-amber-700">Gợi ý: </span>
-              {exercise.hint}
+              <div className="flex items-start gap-2">
+                <p className="min-w-0 flex-1">
+                  <span className="font-semibold text-amber-700">Gợi ý: </span>
+                  {exercise.hint}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowFrame((open) => !open)}
+                  aria-expanded={showFrame}
+                  aria-label={showFrame ? 'Ẩn khung câu lệnh' : 'Hiện khung câu lệnh'}
+                  className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-md text-amber-700 transition hover:bg-amber-100"
+                >
+                  <svg
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    className={`h-4 w-4 fill-current transition ${showFrame ? 'rotate-90' : ''}`}
+                  >
+                    <path d="M7.2 4.2a1 1 0 0 1 1.4 0l5 5a1 1 0 0 1 0 1.4l-5 5a1 1 0 1 1-1.4-1.4L11.5 10 7.2 5.6a1 1 0 0 1 0-1.4Z" />
+                  </svg>
+                </button>
+              </div>
+              {showFrame && (
+                <div className="mt-2">
+                  <p className="mb-1 text-xs font-medium text-amber-700">
+                    Khung câu lệnh — chỗ ... là phần bạn tự viết
+                  </p>
+                  <pre className="overflow-auto whitespace-pre-wrap rounded-md bg-white px-3 py-2 font-mono text-[13px] leading-5 text-slate-800">
+                    {exercise.starterSql}
+                  </pre>
+                </div>
+              )}
             </div>
           )}
 

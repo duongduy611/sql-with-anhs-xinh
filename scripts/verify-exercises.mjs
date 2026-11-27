@@ -10,8 +10,26 @@ async function loadTs(path) {
   return import(url);
 }
 
+async function loadExercises() {
+  const bundled = await transform(readFileSync('src/content/exercises.ts', 'utf8'), {
+    loader: 'ts',
+    format: 'esm',
+  });
+  const extra = await transform(readFileSync('src/content/exercises-extra.ts', 'utf8'), {
+    loader: 'ts',
+    format: 'esm',
+  });
+  const extraUrl = 'data:text/javascript;base64,' + Buffer.from(extra.code.replace(/import type \{ Exercise \} from '\.\/exercises';\r?\n/, '')).toString('base64');
+  const code = bundled.code.replace(
+    /import \{ EXTRA_EXERCISES \} from ['"]\.\/exercises-extra['"];/,
+    `import { EXTRA_EXERCISES } from ${JSON.stringify(extraUrl)};`,
+  );
+  const url = 'data:text/javascript;base64,' + Buffer.from(code).toString('base64');
+  return import(url);
+}
+
 const { SCHEMA_SQL } = await loadTs('src/db/schema.ts');
-const { EXERCISES } = await loadTs('src/content/exercises.ts');
+const { EXERCISES } = await loadExercises();
 
 const SQL = await initSqlJs({ locateFile: (f) => 'node_modules/sql.js/dist/' + f });
 

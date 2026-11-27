@@ -1,4 +1,4 @@
-import { createDatabase, runSql, type QueryResult } from './sqlEngine';
+import { createDatabase, isBlankSql, runSql, type QueryResult } from './sqlEngine';
 
 export interface CheckResult {
   correct: boolean;
@@ -70,6 +70,15 @@ export async function checkAnswer(
   solutionSql: string,
   orderMatters: boolean,
 ): Promise<CheckResult> {
+  if (isBlankSql(userSql)) {
+    return {
+      correct: false,
+      message: 'Hãy viết câu SQL trước khi kiểm tra.',
+      userResult: null,
+      expectedResult: null,
+    };
+  }
+
   const dbExpected = await createDatabase();
   const expectedRun = runSql(dbExpected, solutionSql);
   dbExpected.close();

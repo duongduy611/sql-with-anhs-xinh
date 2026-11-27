@@ -34,8 +34,24 @@ export interface RunOutcome {
   rowsAffected: number;
 }
 
+export function isBlankSql(sql: string): boolean {
+  const withoutComments = sql
+    .replace(/--[^\n]*/g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
+  return withoutComments.replace(/;/g, '').trim() === '';
+}
+
 /** Chạy một (hoặc nhiều) câu lệnh SQL và trả về kết quả hoặc lỗi. */
 export function runSql(db: Database, sql: string): RunOutcome {
+  if (isBlankSql(sql)) {
+    return {
+      results: [],
+      error: 'Hãy nhập câu SQL trước khi chạy.',
+      elapsedMs: 0,
+      rowsAffected: 0,
+    };
+  }
+
   const start = performance.now();
   try {
     const res = db.exec(sql);

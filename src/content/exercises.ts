@@ -1,3 +1,5 @@
+import { EXTRA_EXERCISES } from './exercises-extra';
+
 export type Difficulty = 'Dễ' | 'Trung bình' | 'Khó';
 
 export interface Exercise {
@@ -29,7 +31,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ...\nFROM accounts;',
     solutionSql: 'SELECT account_number, account_type, balance FROM accounts',
     orderMatters: false,
-    hint: 'Chọn 3 cột account_number, account_type, balance.',
+    hint: "Lấy 3 cột account_number, account_type và balance từ bảng accounts. Bài này không cần lọc.",
   },
   {
     id: 'e02',
@@ -40,7 +42,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name\nFROM customers\nWHERE ...;',
     solutionSql: "SELECT full_name FROM customers WHERE city = 'Hà Nội'",
     orderMatters: false,
-    hint: "Điều kiện city = 'Hà Nội' (chuỗi đặt trong nháy đơn).",
+    hint: "Lấy cột full_name từ bảng customers. Thêm WHERE để chỉ giữ khách có city bằng Hà Nội. Chữ phải đặt trong nháy đơn, ví dụ 'Hà Nội'.",
   },
   {
     id: 'e03',
@@ -53,7 +55,7 @@ const exerciseBank: Exercise[] = [
     solutionSql:
       "SELECT account_number, balance FROM accounts WHERE status = 'ACTIVE' AND balance > 100000000",
     orderMatters: false,
-    hint: 'Nối hai điều kiện bằng AND.',
+    hint: "Lấy account_number và balance từ accounts. WHERE cần hai điều kiện cùng đúng: status bằng 'ACTIVE' và balance lớn hơn 100000000. Nối hai điều kiện bằng AND.",
   },
   {
     id: 'e04',
@@ -67,7 +69,7 @@ const exerciseBank: Exercise[] = [
     solutionSql:
       'SELECT account_number, balance FROM accounts ORDER BY balance DESC LIMIT 5',
     orderMatters: true,
-    hint: 'ORDER BY balance DESC rồi LIMIT 5.',
+    hint: "Lấy account_number và balance từ accounts. ORDER BY balance DESC đưa số dư cao lên trên, LIMIT 5 chỉ giữ 5 dòng.",
   },
   {
     id: 'e05',
@@ -81,7 +83,7 @@ const exerciseBank: Exercise[] = [
     solutionSql:
       'SELECT b.branch_name, SUM(a.balance) AS tong_so_du FROM accounts a JOIN branches b ON b.branch_id = a.branch_id GROUP BY b.branch_name',
     orderMatters: false,
-    hint: 'JOIN branches b ON b.branch_id = a.branch_id, rồi GROUP BY b.branch_name.',
+    hint: "accounts không có tên chi nhánh, nên JOIN sang branches bằng branch_id. SUM(balance) rồi GROUP BY branch_name để mỗi chi nhánh một dòng.",
   },
   {
     id: 'e06',
@@ -94,7 +96,7 @@ const exerciseBank: Exercise[] = [
     solutionSql:
       'SELECT channel, COUNT(*) AS so_gd FROM transactions GROUP BY channel',
     orderMatters: false,
-    hint: 'GROUP BY channel với COUNT(*).',
+    hint: "Từ bảng transactions, mỗi channel là một nhóm. COUNT(*) đếm số dòng trong nhóm, GROUP BY channel.",
   },
   {
     id: 'e07',
@@ -108,7 +110,7 @@ const exerciseBank: Exercise[] = [
     solutionSql:
       "SELECT b.branch_name, SUM(l.principal) AS du_no FROM loans l JOIN branches b ON b.branch_id = l.branch_id WHERE l.status = 'ACTIVE' GROUP BY b.branch_name",
     orderMatters: false,
-    hint: "Lọc WHERE l.status = 'ACTIVE' trước khi GROUP BY b.branch_name.",
+    hint: "JOIN loans với branches bằng branch_id để có branch_name. WHERE chỉ giữ khoản vay status = 'ACTIVE', rồi SUM(principal) và GROUP BY branch_name.",
   },
   {
     id: 'e08',
@@ -122,7 +124,7 @@ const exerciseBank: Exercise[] = [
     solutionSql:
       'SELECT c.full_name, COUNT(*) AS so_tk FROM customers c JOIN accounts a ON a.customer_id = c.customer_id GROUP BY c.full_name HAVING COUNT(*) > 1',
     orderMatters: false,
-    hint: 'Lọc nhóm bằng HAVING COUNT(*) > 1.',
+    hint: "JOIN customers với accounts bằng customer_id. GROUP BY full_name và COUNT(*) để đếm tài khoản. HAVING COUNT(*) > 1 chỉ giữ khách có hơn một tài khoản.",
   },
   {
     id: 'e09',
@@ -136,7 +138,7 @@ const exerciseBank: Exercise[] = [
     solutionSql:
       'SELECT c.full_name, SUM(a.balance) AS tong_so_du FROM customers c JOIN accounts a ON a.customer_id = c.customer_id GROUP BY c.full_name ORDER BY tong_so_du DESC LIMIT 3',
     orderMatters: true,
-    hint: 'GROUP BY c.full_name, ORDER BY tổng số dư DESC, rồi LIMIT 3.',
+    hint: "JOIN customers với accounts, SUM(balance) theo từng full_name. ORDER BY cột tổng giảm dần (DESC), rồi LIMIT 3.",
   },
   {
     id: 'e10',
@@ -150,7 +152,7 @@ const exerciseBank: Exercise[] = [
     solutionSql:
       'SELECT full_name FROM customers WHERE customer_id NOT IN (SELECT customer_id FROM accounts)',
     orderMatters: false,
-    hint: 'Dùng NOT IN với truy vấn con lấy customer_id từ accounts.',
+    hint: "Lấy full_name từ customers. Khách chưa có tài khoản là customer_id không nằm trong danh sách customer_id của bảng accounts. Dùng NOT IN và một truy vấn con.",
   },
   {
     id: 'e11',
@@ -164,7 +166,7 @@ const exerciseBank: Exercise[] = [
     solutionSql:
       "SELECT strftime('%Y-%m', txn_date) AS thang, COUNT(*) AS so_gd FROM transactions GROUP BY strftime('%Y-%m', txn_date)",
     orderMatters: false,
-    hint: "GROUP BY strftime('%Y-%m', txn_date) — nhóm theo đúng biểu thức trong SELECT.",
+    hint: "strftime('%Y-%m', txn_date) đổi ngày thành tháng dạng YYYY-MM. COUNT(*) đếm giao dịch, GROUP BY phải lặp lại đúng biểu thức strftime đó.",
   },
 
   // ======================= DỄ (e12 - e51) =======================
@@ -177,7 +179,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ...\nFROM customers;',
     solutionSql: 'SELECT full_name FROM customers',
     orderMatters: false,
-    hint: 'Chỉ cần SELECT cột full_name.',
+    hint: "Chỉ cần một cột: SELECT full_name FROM customers. Không lọc, không sắp xếp.",
   },
   {
     id: 'e13',
@@ -188,7 +190,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ...\nFROM branches;',
     solutionSql: 'SELECT * FROM branches',
     orderMatters: false,
-    hint: 'Dùng dấu * để lấy mọi cột.',
+    hint: "Dấu * nghĩa là mọi cột. Viết SELECT * FROM branches.",
   },
   {
     id: 'e14',
@@ -199,7 +201,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ...\nFROM customers;',
     solutionSql: 'SELECT full_name, email, phone FROM customers',
     orderMatters: false,
-    hint: 'Liệt kê 3 cột cách nhau bởi dấu phẩy.',
+    hint: "Liệt kê full_name, email, phone, cách nhau bằng dấu phẩy, rồi FROM customers.",
   },
   {
     id: 'e15',
@@ -211,7 +213,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT DISTINCT ...\nFROM customers;',
     solutionSql: 'SELECT DISTINCT city FROM customers',
     orderMatters: false,
-    hint: 'Dùng DISTINCT để loại trùng.',
+    hint: "SELECT DISTINCT city FROM customers. DISTINCT bỏ các thành phố bị lặp lại.",
   },
   {
     id: 'e16',
@@ -222,7 +224,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT DISTINCT ...\nFROM accounts;',
     solutionSql: 'SELECT DISTINCT account_type FROM accounts',
     orderMatters: false,
-    hint: 'DISTINCT account_type.',
+    hint: "SELECT DISTINCT account_type FROM accounts. DISTINCT để mỗi loại tài khoản chỉ còn một dòng.",
   },
   {
     id: 'e17',
@@ -233,7 +235,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE ...;',
     solutionSql: 'SELECT account_number, balance FROM accounts WHERE balance >= 100000000',
     orderMatters: false,
-    hint: 'Dùng toán tử >=.',
+    hint: "Lấy account_number và balance từ accounts. WHERE balance >= 100000000. Dấu >= là lớn hơn hoặc bằng.",
   },
   {
     id: 'e18',
@@ -244,7 +246,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, currency, balance\nFROM accounts\nWHERE ...;',
     solutionSql: "SELECT account_number, currency, balance FROM accounts WHERE currency = 'USD'",
     orderMatters: false,
-    hint: "Điều kiện currency = 'USD'.",
+    hint: "Lấy account_number, currency, balance từ accounts. WHERE currency = 'USD'.",
   },
   {
     id: 'e19',
@@ -255,7 +257,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name, city\nFROM customers\nWHERE ...;',
     solutionSql: "SELECT full_name, city FROM customers WHERE city = 'Hồ Chí Minh'",
     orderMatters: false,
-    hint: "So sánh city = 'Hồ Chí Minh'.",
+    hint: "Lấy full_name và city từ customers. WHERE city = 'Hồ Chí Minh'.",
   },
   {
     id: 'e20',
@@ -266,7 +268,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, status\nFROM accounts\nWHERE ...;',
     solutionSql: "SELECT account_number, status FROM accounts WHERE status <> 'ACTIVE'",
     orderMatters: false,
-    hint: 'Dùng toán tử khác: <> hoặc !=.',
+    hint: "Lấy account_number và status từ accounts. Muốn giá trị khác 'ACTIVE' thì dùng dấu <> (hoặc !=).",
   },
   {
     id: 'e21',
@@ -277,7 +279,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name\nFROM customers\nWHERE ...;',
     solutionSql: 'SELECT full_name FROM customers WHERE email IS NULL',
     orderMatters: false,
-    hint: 'Kiểm tra NULL bằng IS NULL, không dùng = NULL.',
+    hint: "Lấy full_name từ customers. Ô trống không so sánh bằng dấu =. Phải viết email IS NULL.",
   },
   {
     id: 'e22',
@@ -288,7 +290,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name, email\nFROM customers\nWHERE ...;',
     solutionSql: 'SELECT full_name, email FROM customers WHERE email IS NOT NULL',
     orderMatters: false,
-    hint: 'Dùng IS NOT NULL.',
+    hint: "Lấy full_name và email từ customers. Khách đã có email là email IS NOT NULL.",
   },
   {
     id: 'e23',
@@ -299,7 +301,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name, salary\nFROM employees\nWHERE ...;',
     solutionSql: 'SELECT full_name, salary FROM employees WHERE salary > 20000000',
     orderMatters: false,
-    hint: 'So sánh salary > 20000000.',
+    hint: "Lấy full_name và salary từ employees. WHERE salary > 20000000.",
   },
   {
     id: 'e24',
@@ -310,7 +312,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name, role\nFROM employees\nWHERE ...;',
     solutionSql: "SELECT full_name, role FROM employees WHERE role = 'Teller'",
     orderMatters: false,
-    hint: "role = 'Teller'.",
+    hint: "Lấy full_name và role từ employees. WHERE role = 'Teller'.",
   },
   {
     id: 'e25',
@@ -321,7 +323,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT loan_id, loan_type, interest_rate\nFROM loans\nWHERE ...;',
     solutionSql: 'SELECT loan_id, loan_type, interest_rate FROM loans WHERE interest_rate > 10',
     orderMatters: false,
-    hint: 'interest_rate > 10.',
+    hint: "Lấy loan_id, loan_type và interest_rate từ loans. WHERE interest_rate > 10.",
   },
   {
     id: 'e26',
@@ -332,7 +334,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT card_id, card_number, status\nFROM cards\nWHERE ...;',
     solutionSql: "SELECT card_id, card_number, status FROM cards WHERE status = 'ACTIVE'",
     orderMatters: false,
-    hint: "status = 'ACTIVE'.",
+    hint: "Lấy card_id, card_number và status từ cards. WHERE status = 'ACTIVE'.",
   },
   {
     id: 'e27',
@@ -343,7 +345,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT txn_id, amount\nFROM transactions\nWHERE ...;',
     solutionSql: "SELECT txn_id, amount FROM transactions WHERE txn_type = 'DEPOSIT'",
     orderMatters: false,
-    hint: "txn_type = 'DEPOSIT'.",
+    hint: "Lấy txn_id và amount từ transactions. WHERE txn_type = 'DEPOSIT'.",
   },
   {
     id: 'e28',
@@ -354,7 +356,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT txn_id, txn_type, amount\nFROM transactions\nWHERE ...;',
     solutionSql: 'SELECT txn_id, txn_type, amount FROM transactions WHERE amount > 10000000',
     orderMatters: false,
-    hint: 'amount > 10000000.',
+    hint: "Lấy txn_id, txn_type và amount từ transactions. WHERE amount > 10000000.",
   },
   {
     id: 'e29',
@@ -366,7 +368,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE balance BETWEEN ... AND ...;',
     solutionSql: 'SELECT account_number, balance FROM accounts WHERE balance BETWEEN 10000000 AND 100000000',
     orderMatters: false,
-    hint: 'Dùng BETWEEN 10000000 AND 100000000.',
+    hint: "Lấy account_number và balance từ accounts. WHERE balance BETWEEN 10000000 AND 100000000. BETWEEN gồm cả hai mốc.",
   },
   {
     id: 'e30',
@@ -377,7 +379,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT full_name, city\nFROM customers\nWHERE city IN (...);",
     solutionSql: "SELECT full_name, city FROM customers WHERE city IN ('Hà Nội', 'Hải Phòng')",
     orderMatters: false,
-    hint: "city IN ('Hà Nội', 'Hải Phòng').",
+    hint: "Lấy full_name và city từ customers. Khi một cột thuộc một danh sách, dùng city IN ('Hà Nội', 'Hải Phòng').",
   },
   {
     id: 'e31',
@@ -388,7 +390,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT account_number, account_type\nFROM accounts\nWHERE account_type IN (...);",
     solutionSql: "SELECT account_number, account_type FROM accounts WHERE account_type IN ('SAVINGS', 'CREDIT')",
     orderMatters: false,
-    hint: "account_type IN ('SAVINGS', 'CREDIT').",
+    hint: "Lấy account_number và account_type từ accounts. WHERE account_type IN ('SAVINGS', 'CREDIT').",
   },
   {
     id: 'e32',
@@ -399,7 +401,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT full_name\nFROM customers\nWHERE full_name LIKE '...';",
     solutionSql: "SELECT full_name FROM customers WHERE full_name LIKE 'Nguyễn%'",
     orderMatters: false,
-    hint: "Dùng LIKE 'Nguyễn%' (% là phần còn lại).",
+    hint: "Lấy full_name từ customers. LIKE so khớp một phần: 'Nguyễn%' nghĩa là bắt đầu bằng Nguyễn, dấu % là phần còn lại.",
   },
   {
     id: 'e33',
@@ -410,7 +412,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT full_name, email\nFROM customers\nWHERE email LIKE '...';",
     solutionSql: "SELECT full_name, email FROM customers WHERE email LIKE '%@email.com'",
     orderMatters: false,
-    hint: "LIKE '%@email.com'.",
+    hint: "Lấy full_name và email từ customers. '%@email.com' nghĩa là kết thúc bằng @email.com vì dấu % đứng trước.",
   },
   {
     id: 'e34',
@@ -422,7 +424,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance\nFROM accounts\nORDER BY ...;',
     solutionSql: 'SELECT account_number, balance FROM accounts ORDER BY balance ASC',
     orderMatters: true,
-    hint: 'ORDER BY balance ASC.',
+    hint: "Lấy account_number và balance từ accounts. ORDER BY balance ASC xếp số dư tăng dần. Bài này chấm cả thứ tự dòng.",
   },
   {
     id: 'e35',
@@ -434,7 +436,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance\nFROM accounts\nORDER BY ...\nLIMIT 3;',
     solutionSql: 'SELECT account_number, balance FROM accounts ORDER BY balance DESC LIMIT 3',
     orderMatters: true,
-    hint: 'ORDER BY balance DESC LIMIT 3.',
+    hint: "Lấy account_number và balance từ accounts. ORDER BY balance DESC xếp giảm dần, LIMIT 3 chỉ giữ 3 dòng đầu.",
   },
   {
     id: 'e36',
@@ -446,7 +448,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance\nFROM accounts\nORDER BY ...\nLIMIT 3;',
     solutionSql: 'SELECT account_number, balance FROM accounts ORDER BY balance ASC LIMIT 3',
     orderMatters: true,
-    hint: 'ORDER BY balance ASC LIMIT 3.',
+    hint: "Lấy account_number và balance từ accounts. Số dư thấp nhất là ORDER BY balance ASC, rồi LIMIT 3.",
   },
   {
     id: 'e37',
@@ -457,7 +459,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name\nFROM customers\nORDER BY ...;',
     solutionSql: 'SELECT full_name FROM customers ORDER BY full_name ASC',
     orderMatters: true,
-    hint: 'ORDER BY full_name ASC.',
+    hint: "Lấy full_name từ customers. A đến Z là ORDER BY full_name ASC.",
   },
   {
     id: 'e38',
@@ -468,7 +470,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name, salary\nFROM employees\nORDER BY ...;',
     solutionSql: 'SELECT full_name, salary FROM employees ORDER BY salary DESC',
     orderMatters: true,
-    hint: 'ORDER BY salary DESC.',
+    hint: "Lấy full_name và salary từ employees. Lương cao trước là ORDER BY salary DESC.",
   },
   {
     id: 'e39',
@@ -479,7 +481,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT COUNT(*) ...\nFROM customers;',
     solutionSql: 'SELECT COUNT(*) AS so_kh FROM customers',
     orderMatters: false,
-    hint: 'Dùng COUNT(*).',
+    hint: "COUNT(*) đếm số dòng. Viết SELECT COUNT(*) FROM customers. Có thể đặt tên cột bằng AS.",
   },
   {
     id: 'e40',
@@ -490,7 +492,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ... AS so_tk\nFROM accounts;',
     solutionSql: 'SELECT COUNT(*) AS so_tk FROM accounts',
     orderMatters: false,
-    hint: 'COUNT(*) AS so_tk.',
+    hint: "Đếm dòng của accounts và đặt tên cột: SELECT COUNT(*) AS so_tk FROM accounts.",
   },
   {
     id: 'e41',
@@ -501,7 +503,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ... AS tong\nFROM accounts;',
     solutionSql: 'SELECT SUM(balance) AS tong FROM accounts',
     orderMatters: false,
-    hint: 'SUM(balance).',
+    hint: "SUM cộng một cột số. SELECT SUM(balance) AS tong FROM accounts.",
   },
   {
     id: 'e42',
@@ -512,7 +514,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ... AS tb\nFROM accounts;',
     solutionSql: 'SELECT AVG(balance) AS tb FROM accounts',
     orderMatters: false,
-    hint: 'AVG(balance).',
+    hint: "AVG tính trung bình. SELECT AVG(balance) AS tb FROM accounts.",
   },
   {
     id: 'e43',
@@ -523,7 +525,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ... AS cao_nhat, ... AS thap_nhat\nFROM accounts;',
     solutionSql: 'SELECT MAX(balance) AS cao_nhat, MIN(balance) AS thap_nhat FROM accounts',
     orderMatters: false,
-    hint: 'Dùng MAX và MIN.',
+    hint: "MAX lấy giá trị lớn nhất, MIN lấy nhỏ nhất. Cả hai viết trong cùng một SELECT, mỗi cái có AS tên cột.",
   },
   {
     id: 'e44',
@@ -534,7 +536,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ... AS so_tp\nFROM customers;',
     solutionSql: 'SELECT COUNT(DISTINCT city) AS so_tp FROM customers',
     orderMatters: false,
-    hint: 'COUNT(DISTINCT city).',
+    hint: "COUNT(DISTINCT city) đếm thành phố không trùng. Đặt tên cột so_tp, bảng là customers.",
   },
   {
     id: 'e45',
@@ -545,7 +547,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT account_number, opened_date\nFROM accounts\nWHERE opened_date >= '...';",
     solutionSql: "SELECT account_number, opened_date FROM accounts WHERE opened_date >= '2022-01-01'",
     orderMatters: false,
-    hint: "Ngày lưu dạng chuỗi nên so sánh được: opened_date >= '2022-01-01'.",
+    hint: "Lấy account_number và opened_date từ accounts. Ngày viết trong nháy đơn: opened_date >= '2022-01-01'.",
   },
   {
     id: 'e46',
@@ -556,7 +558,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT txn_id, amount\nFROM transactions\nWHERE channel = '...';",
     solutionSql: "SELECT txn_id, amount FROM transactions WHERE channel = 'ATM'",
     orderMatters: false,
-    hint: "channel = 'ATM'.",
+    hint: "Lấy txn_id và amount từ transactions. WHERE channel = 'ATM'.",
   },
   {
     id: 'e47',
@@ -568,7 +570,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ... AS so_tk, ... AS so_du\nFROM accounts;',
     solutionSql: 'SELECT account_number AS so_tk, balance AS so_du FROM accounts',
     orderMatters: false,
-    hint: 'Dùng AS để đổi tên cột hiển thị.',
+    hint: "AS đổi tên cột lúc hiển thị: account_number AS so_tk, balance AS so_du. Bảng là accounts.",
   },
   {
     id: 'e48',
@@ -580,7 +582,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, ... AS so_du_trieu\nFROM accounts;',
     solutionSql: 'SELECT account_number, balance / 1000000 AS so_du_trieu FROM accounts',
     orderMatters: false,
-    hint: 'Thực hiện phép chia ngay trong SELECT.',
+    hint: "Phép tính viết ngay trong SELECT: balance / 1000000, rồi AS so_du_trieu. Vẫn lấy thêm account_number từ accounts.",
   },
   {
     id: 'e49',
@@ -591,7 +593,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT full_name, birth_date\nFROM customers\nWHERE birth_date < '...';",
     solutionSql: "SELECT full_name, birth_date FROM customers WHERE birth_date < '1990-01-01'",
     orderMatters: false,
-    hint: "birth_date < '1990-01-01'.",
+    hint: "Lấy full_name và birth_date từ customers. WHERE birth_date < '1990-01-01'.",
   },
   {
     id: 'e50',
@@ -602,7 +604,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT loan_id, loan_type, principal\nFROM loans\nWHERE ...;',
     solutionSql: 'SELECT loan_id, loan_type, principal FROM loans WHERE principal >= 1000000000',
     orderMatters: false,
-    hint: 'principal >= 1000000000.',
+    hint: "Lấy loan_id, loan_type và principal từ loans. WHERE principal >= 1000000000.",
   },
   {
     id: 'e51',
@@ -613,7 +615,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE ...;',
     solutionSql: 'SELECT account_number, balance FROM accounts WHERE balance < 0',
     orderMatters: false,
-    hint: 'balance < 0.',
+    hint: "Lấy account_number và balance từ accounts. Số dư âm là balance < 0.",
   },
 
   // ======================= TRUNG BÌNH (e52 - e86) =======================
@@ -626,7 +628,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_type, COUNT(*) AS so_luong\nFROM accounts\nGROUP BY ...;',
     solutionSql: 'SELECT account_type, COUNT(*) AS so_luong FROM accounts GROUP BY account_type',
     orderMatters: false,
-    hint: 'GROUP BY account_type.',
+    hint: "Mỗi account_type là một nhóm. SELECT account_type, COUNT(*) AS so_luong, rồi GROUP BY account_type.",
   },
   {
     id: 'e53',
@@ -637,7 +639,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_type, SUM(balance) AS tong\nFROM accounts\nGROUP BY ...;',
     solutionSql: 'SELECT account_type, SUM(balance) AS tong FROM accounts GROUP BY account_type',
     orderMatters: false,
-    hint: 'SUM(balance) với GROUP BY account_type.',
+    hint: "Cộng balance trong từng loại: SUM(balance) AS tong, GROUP BY account_type. Bảng là accounts.",
   },
   {
     id: 'e54',
@@ -648,7 +650,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT branch_id, AVG(balance) AS tb\nFROM accounts\nGROUP BY ...;',
     solutionSql: 'SELECT branch_id, AVG(balance) AS tb FROM accounts GROUP BY branch_id',
     orderMatters: false,
-    hint: 'GROUP BY branch_id với AVG(balance).',
+    hint: "AVG(balance) AS tb, nhóm theo chi nhánh bằng GROUP BY branch_id. Bảng là accounts.",
   },
   {
     id: 'e55',
@@ -659,7 +661,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT city, COUNT(*) AS so_kh\nFROM customers\nGROUP BY ...;',
     solutionSql: 'SELECT city, COUNT(*) AS so_kh FROM customers GROUP BY city',
     orderMatters: false,
-    hint: 'GROUP BY city.',
+    hint: "Mỗi city một dòng: COUNT(*) AS so_kh và GROUP BY city. Bảng là customers.",
   },
   {
     id: 'e56',
@@ -670,7 +672,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT txn_type, COUNT(*) AS so_gd\nFROM transactions\nGROUP BY ...;',
     solutionSql: 'SELECT txn_type, COUNT(*) AS so_gd FROM transactions GROUP BY txn_type',
     orderMatters: false,
-    hint: 'GROUP BY txn_type.',
+    hint: "Đếm giao dịch theo loại: COUNT(*) AS so_gd, GROUP BY txn_type. Bảng là transactions.",
   },
   {
     id: 'e57',
@@ -681,7 +683,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT channel, SUM(amount) AS tong\nFROM transactions\nGROUP BY ...;',
     solutionSql: 'SELECT channel, SUM(amount) AS tong FROM transactions GROUP BY channel',
     orderMatters: false,
-    hint: 'SUM(amount) với GROUP BY channel.',
+    hint: "Cộng amount theo kênh: SUM(amount) AS tong, GROUP BY channel. Bảng là transactions.",
   },
   {
     id: 'e58',
@@ -692,7 +694,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT brand, COUNT(*) AS so_the\nFROM cards\nGROUP BY ...;',
     solutionSql: 'SELECT brand, COUNT(*) AS so_the FROM cards GROUP BY brand',
     orderMatters: false,
-    hint: 'GROUP BY brand.',
+    hint: "Đếm thẻ theo thương hiệu: COUNT(*) AS so_the, GROUP BY brand. Bảng là cards.",
   },
   {
     id: 'e59',
@@ -704,7 +706,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT loan_type, COUNT(*) AS so_kv, SUM(principal) AS tong_vay\nFROM loans\nGROUP BY ...;',
     solutionSql: 'SELECT loan_type, COUNT(*) AS so_kv, SUM(principal) AS tong_vay FROM loans GROUP BY loan_type',
     orderMatters: false,
-    hint: 'COUNT(*) và SUM(principal), GROUP BY loan_type.',
+    hint: "Trong cùng một SELECT có COUNT(*) AS so_kv và SUM(principal) AS tong_vay. GROUP BY loan_type. Bảng là loans.",
   },
   {
     id: 'e60',
@@ -715,7 +717,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT role, AVG(salary) AS luong_tb\nFROM employees\nGROUP BY ...;',
     solutionSql: 'SELECT role, AVG(salary) AS luong_tb FROM employees GROUP BY role',
     orderMatters: false,
-    hint: 'GROUP BY role với AVG(salary).',
+    hint: "AVG(salary) AS luong_tb, GROUP BY role. Bảng là employees.",
   },
   {
     id: 'e61',
@@ -727,7 +729,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_type, COUNT(*) AS n\nFROM accounts\nGROUP BY account_type\nHAVING ...;',
     solutionSql: 'SELECT account_type, COUNT(*) AS n FROM accounts GROUP BY account_type HAVING COUNT(*) > 3',
     orderMatters: false,
-    hint: 'HAVING COUNT(*) > 3.',
+    hint: "Đếm theo account_type trước. Muốn bỏ nhóm quá nhỏ thì dùng HAVING COUNT(*) > 3. HAVING lọc sau khi nhóm, WHERE thì lọc trước.",
   },
   {
     id: 'e62',
@@ -738,7 +740,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT city, COUNT(*) AS n\nFROM customers\nGROUP BY city\nHAVING ...;',
     solutionSql: 'SELECT city, COUNT(*) AS n FROM customers GROUP BY city HAVING COUNT(*) > 2',
     orderMatters: false,
-    hint: 'HAVING COUNT(*) > 2.',
+    hint: "Đếm khách theo city, rồi HAVING COUNT(*) > 2 để chỉ giữ thành phố có hơn 2 khách.",
   },
   {
     id: 'e63',
@@ -750,7 +752,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT channel, SUM(amount) AS tong\nFROM transactions\nGROUP BY channel\nHAVING ...;',
     solutionSql: 'SELECT channel, SUM(amount) AS tong FROM transactions GROUP BY channel HAVING SUM(amount) > 50000000',
     orderMatters: false,
-    hint: 'HAVING SUM(amount) > 50000000.',
+    hint: "SUM(amount) theo channel. Giữ kênh có tổng lớn: HAVING SUM(amount) > 50000000.",
   },
   {
     id: 'e64',
@@ -761,7 +763,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT a.account_number, c.full_name\nFROM accounts a\nJOIN customers c ON ...;',
     solutionSql: 'SELECT a.account_number, c.full_name FROM accounts a JOIN customers c ON c.customer_id = a.customer_id',
     orderMatters: false,
-    hint: 'JOIN ON c.customer_id = a.customer_id.',
+    hint: "Đặt bí danh a cho accounts và c cho customers. JOIN bằng c.customer_id = a.customer_id, rồi lấy a.account_number và c.full_name.",
   },
   {
     id: 'e65',
@@ -772,7 +774,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT a.account_number, b.branch_name\nFROM accounts a\nJOIN branches b ON ...;',
     solutionSql: 'SELECT a.account_number, b.branch_name FROM accounts a JOIN branches b ON b.branch_id = a.branch_id',
     orderMatters: false,
-    hint: 'JOIN ON b.branch_id = a.branch_id.',
+    hint: "accounts có branch_id, branches có tên. JOIN ON b.branch_id = a.branch_id, lấy a.account_number và b.branch_name.",
   },
   {
     id: 'e66',
@@ -783,7 +785,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ca.card_number, a.account_number\nFROM cards ca\nJOIN accounts a ON ...;',
     solutionSql: 'SELECT ca.card_number, a.account_number FROM cards ca JOIN accounts a ON a.account_id = ca.account_id',
     orderMatters: false,
-    hint: 'JOIN ON a.account_id = ca.account_id.',
+    hint: "Thẻ trỏ tới tài khoản bằng account_id. FROM cards ca JOIN accounts a ON a.account_id = ca.account_id.",
   },
   {
     id: 'e67',
@@ -794,7 +796,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT t.txn_id, a.account_number, t.amount\nFROM transactions t\nJOIN accounts a ON ...;',
     solutionSql: 'SELECT t.txn_id, a.account_number, t.amount FROM transactions t JOIN accounts a ON a.account_id = t.account_id',
     orderMatters: false,
-    hint: 'JOIN ON a.account_id = t.account_id.',
+    hint: "Giao dịch trỏ tới tài khoản bằng account_id. FROM transactions t JOIN accounts a ON a.account_id = t.account_id.",
   },
   {
     id: 'e68',
@@ -805,7 +807,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT l.loan_id, c.full_name, l.principal\nFROM loans l\nJOIN customers c ON ...;',
     solutionSql: 'SELECT l.loan_id, c.full_name, l.principal FROM loans l JOIN customers c ON c.customer_id = l.customer_id',
     orderMatters: false,
-    hint: 'JOIN ON c.customer_id = l.customer_id.',
+    hint: "Khoản vay trỏ tới khách bằng customer_id. FROM loans l JOIN customers c ON c.customer_id = l.customer_id.",
   },
   {
     id: 'e69',
@@ -816,7 +818,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT e.full_name, b.branch_name\nFROM employees e\nJOIN branches b ON ...;',
     solutionSql: 'SELECT e.full_name, b.branch_name FROM employees e JOIN branches b ON b.branch_id = e.branch_id',
     orderMatters: false,
-    hint: 'JOIN ON b.branch_id = e.branch_id.',
+    hint: "Nhân viên thuộc chi nhánh bằng branch_id. FROM employees e JOIN branches b ON b.branch_id = e.branch_id.",
   },
   {
     id: 'e70',
@@ -827,7 +829,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT c.full_name, SUM(a.balance) AS tong\nFROM customers c\nJOIN accounts a ON ...\nGROUP BY c.full_name;',
     solutionSql: 'SELECT c.full_name, SUM(a.balance) AS tong FROM customers c JOIN accounts a ON a.customer_id = c.customer_id GROUP BY c.full_name',
     orderMatters: false,
-    hint: 'JOIN rồi GROUP BY c.full_name.',
+    hint: "JOIN customers với accounts bằng customer_id. SUM(a.balance) AS tong, rồi GROUP BY c.full_name vì mỗi khách một dòng.",
   },
   {
     id: 'e71',
@@ -838,7 +840,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT b.branch_name, SUM(a.balance) AS tong\nFROM accounts a\nJOIN branches b ON ...\nGROUP BY b.branch_name;',
     solutionSql: 'SELECT b.branch_name, SUM(a.balance) AS tong FROM accounts a JOIN branches b ON b.branch_id = a.branch_id GROUP BY b.branch_name',
     orderMatters: false,
-    hint: 'GROUP BY b.branch_name.',
+    hint: "JOIN accounts với branches bằng branch_id. SUM(a.balance) AS tong và GROUP BY b.branch_name.",
   },
   {
     id: 'e72',
@@ -849,7 +851,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT b.branch_name, COUNT(*) AS so_tk\nFROM accounts a\nJOIN branches b ON ...\nGROUP BY b.branch_name;',
     solutionSql: 'SELECT b.branch_name, COUNT(*) AS so_tk FROM accounts a JOIN branches b ON b.branch_id = a.branch_id GROUP BY b.branch_name',
     orderMatters: false,
-    hint: 'COUNT(*) với GROUP BY b.branch_name.',
+    hint: "Cùng cách nối accounts với branches bằng branch_id, nhưng đếm bằng COUNT(*) AS so_tk và GROUP BY b.branch_name.",
   },
   {
     id: 'e73',
@@ -860,7 +862,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT a.account_number, COUNT(*) AS so_gd\nFROM transactions t\nJOIN accounts a ON ...\nGROUP BY a.account_number;',
     solutionSql: 'SELECT a.account_number, COUNT(*) AS so_gd FROM transactions t JOIN accounts a ON a.account_id = t.account_id GROUP BY a.account_number',
     orderMatters: false,
-    hint: 'JOIN transactions với accounts, GROUP BY a.account_number.',
+    hint: "JOIN transactions với accounts bằng account_id. COUNT(*) AS so_gd, GROUP BY a.account_number.",
   },
   {
     id: 'e74',
@@ -872,7 +874,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT account_number,\n       CASE WHEN ... THEN 'Cao' ... END AS phan_loai\nFROM accounts;",
     solutionSql: "SELECT account_number, CASE WHEN balance >= 100000000 THEN 'Cao' WHEN balance >= 10000000 THEN 'Trung bình' ELSE 'Thấp' END AS phan_loai FROM accounts",
     orderMatters: false,
-    hint: 'Dùng CASE WHEN ... THEN ... ELSE ... END.',
+    hint: "Trong SELECT, CASE kiểm tra lần lượt: balance >= 100000000 thì 'Cao', balance >= 10000000 thì 'Trung bình', còn lại 'Thấp'. Kết thúc bằng END AS phan_loai.",
   },
   {
     id: 'e75',
@@ -884,7 +886,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ... AS dang_hoat_dong,\n       ... AS khac\nFROM accounts;',
     solutionSql: "SELECT SUM(CASE WHEN status = 'ACTIVE' THEN 1 ELSE 0 END) AS dang_hoat_dong, SUM(CASE WHEN status <> 'ACTIVE' THEN 1 ELSE 0 END) AS khac FROM accounts",
     orderMatters: false,
-    hint: 'Dùng SUM(CASE WHEN ... THEN 1 ELSE 0 END).',
+    hint: "Không cần GROUP BY. Mỗi cột là SUM(CASE WHEN điều kiện THEN 1 ELSE 0 END): một cột cho status = 'ACTIVE', một cột cho status khác 'ACTIVE'.",
   },
   {
     id: 'e76',
@@ -896,7 +898,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ... AS thong_tin\nFROM customers;',
     solutionSql: "SELECT full_name || ' - ' || city AS thong_tin FROM customers",
     orderMatters: false,
-    hint: "Dùng full_name || ' - ' || city.",
+    hint: "Toán tử || nối chuỗi. full_name || ' - ' || city, rồi AS thong_tin. Bảng là customers.",
   },
   {
     id: 'e77',
@@ -908,7 +910,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name, ... AS email\nFROM customers;',
     solutionSql: "SELECT full_name, IFNULL(email, 'chưa có') AS email FROM customers",
     orderMatters: false,
-    hint: "IFNULL(email, 'chưa có').",
+    hint: "IFNULL(email, 'chưa có') trả về 'chưa có' khi email đang NULL. Đặt tên cột bằng AS email, và vẫn lấy full_name.",
   },
   {
     id: 'e78',
@@ -920,7 +922,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT strftime('%Y-%m', txn_date) AS thang, COUNT(*) AS n\nFROM transactions\nGROUP BY ...;",
     solutionSql: "SELECT strftime('%Y-%m', txn_date) AS thang, COUNT(*) AS n FROM transactions GROUP BY strftime('%Y-%m', txn_date)",
     orderMatters: false,
-    hint: "GROUP BY strftime('%Y-%m', txn_date).",
+    hint: "strftime('%Y-%m', txn_date) AS thang tạo cột tháng. COUNT(*) AS n, GROUP BY đúng biểu thức strftime đó.",
   },
   {
     id: 'e79',
@@ -932,7 +934,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT strftime('%Y-%m', txn_date) AS thang, SUM(amount) AS tong\nFROM transactions\nGROUP BY ...;",
     solutionSql: "SELECT strftime('%Y-%m', txn_date) AS thang, SUM(amount) AS tong FROM transactions GROUP BY strftime('%Y-%m', txn_date)",
     orderMatters: false,
-    hint: "SUM(amount), GROUP BY strftime('%Y-%m', txn_date).",
+    hint: "Cùng cách tạo cột tháng bằng strftime('%Y-%m', txn_date). Lần này cộng tiền: SUM(amount) AS tong, GROUP BY biểu thức tháng.",
   },
   {
     id: 'e80',
@@ -944,7 +946,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE ...;',
     solutionSql: 'SELECT account_number, balance FROM accounts WHERE balance > (SELECT AVG(balance) FROM accounts)',
     orderMatters: false,
-    hint: 'So sánh với (SELECT AVG(balance) FROM accounts).',
+    hint: "WHERE balance lớn hơn một truy vấn con trong ngoặc: (SELECT AVG(balance) FROM accounts). Truy vấn con trả về đúng một số.",
   },
   {
     id: 'e81',
@@ -956,7 +958,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE ...;',
     solutionSql: 'SELECT account_number, balance FROM accounts WHERE balance = (SELECT MAX(balance) FROM accounts)',
     orderMatters: false,
-    hint: 'balance = (SELECT MAX(balance) FROM accounts).',
+    hint: "WHERE balance bằng truy vấn con (SELECT MAX(balance) FROM accounts). Tài khoản nào bằng mức cao nhất sẽ được lấy.",
   },
   {
     id: 'e82',
@@ -968,7 +970,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT customer_id, COUNT(*) AS n\nFROM accounts\nGROUP BY customer_id\nHAVING ...;',
     solutionSql: 'SELECT customer_id, COUNT(*) AS n FROM accounts GROUP BY customer_id HAVING COUNT(*) >= 2',
     orderMatters: false,
-    hint: 'HAVING COUNT(*) >= 2.',
+    hint: "Chỉ dùng bảng accounts. GROUP BY customer_id, đếm bằng COUNT(*) AS n, rồi HAVING COUNT(*) >= 2.",
   },
   {
     id: 'e83',
@@ -980,7 +982,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT c.full_name, t.amount, t.txn_type\nFROM transactions t\nJOIN accounts a ON ...\nJOIN customers c ON ...;',
     solutionSql: 'SELECT c.full_name, t.amount, t.txn_type FROM transactions t JOIN accounts a ON a.account_id = t.account_id JOIN customers c ON c.customer_id = a.customer_id',
     orderMatters: false,
-    hint: 'Nối 3 bảng qua account_id và customer_id.',
+    hint: "Đi từ transactions sang accounts bằng account_id, rồi từ accounts sang customers bằng customer_id. Đó là hai lần JOIN.",
   },
   {
     id: 'e84',
@@ -992,7 +994,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT b.branch_name, SUM(l.principal) AS tong\nFROM loans l\nJOIN branches b ON ...\nWHERE ...\nGROUP BY b.branch_name;',
     solutionSql: "SELECT b.branch_name, SUM(l.principal) AS tong FROM loans l JOIN branches b ON b.branch_id = l.branch_id WHERE l.status = 'ACTIVE' GROUP BY b.branch_name",
     orderMatters: false,
-    hint: "WHERE l.status = 'ACTIVE' rồi GROUP BY.",
+    hint: "JOIN loans với branches bằng branch_id. WHERE l.status = 'ACTIVE' lọc trước, SUM(l.principal) rồi GROUP BY b.branch_name.",
   },
   {
     id: 'e85',
@@ -1003,7 +1005,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT txn_type, AVG(amount) AS tb\nFROM transactions\nGROUP BY ...;',
     solutionSql: 'SELECT txn_type, AVG(amount) AS tb FROM transactions GROUP BY txn_type',
     orderMatters: false,
-    hint: 'AVG(amount) với GROUP BY txn_type.',
+    hint: "AVG(amount) AS tb theo từng loại giao dịch: GROUP BY txn_type. Bảng là transactions.",
   },
   {
     id: 'e86',
@@ -1015,7 +1017,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT a.account_type, COUNT(*) AS so_the\nFROM cards ca\nJOIN accounts a ON ...\nGROUP BY a.account_type;',
     solutionSql: 'SELECT a.account_type, COUNT(*) AS so_the FROM cards ca JOIN accounts a ON a.account_id = ca.account_id GROUP BY a.account_type',
     orderMatters: false,
-    hint: 'JOIN cards → accounts, GROUP BY a.account_type.',
+    hint: "JOIN cards với accounts bằng account_id để lấy account_type. COUNT(*) AS so_the, GROUP BY a.account_type.",
   },
 
   // ======================= KHÓ (e87 - e111) =======================
@@ -1028,7 +1030,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name\nFROM customers\nWHERE ...;',
     solutionSql: 'SELECT full_name FROM customers WHERE customer_id NOT IN (SELECT customer_id FROM loans)',
     orderMatters: false,
-    hint: 'NOT IN (SELECT customer_id FROM loans).',
+    hint: "Khách chưa vay là customer_id không có trong loans. WHERE customer_id NOT IN (SELECT customer_id FROM loans).",
   },
   {
     id: 'e88',
@@ -1039,7 +1041,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number\nFROM accounts a\nWHERE ...;',
     solutionSql: 'SELECT account_number FROM accounts a WHERE NOT EXISTS (SELECT 1 FROM cards c WHERE c.account_id = a.account_id)',
     orderMatters: false,
-    hint: 'NOT EXISTS với điều kiện c.account_id = a.account_id.',
+    hint: "Đặt bí danh a cho accounts. NOT EXISTS (SELECT 1 FROM cards c WHERE c.account_id = a.account_id) đúng khi tài khoản đó không có thẻ nào.",
   },
   {
     id: 'e89',
@@ -1051,7 +1053,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT full_name\nFROM customers\nWHERE ...;',
     solutionSql: 'SELECT full_name FROM customers WHERE customer_id IN (SELECT customer_id FROM accounts) AND customer_id IN (SELECT customer_id FROM loans)',
     orderMatters: false,
-    hint: 'Kết hợp hai điều kiện IN bằng AND.',
+    hint: "Cần cả hai điều kiện, nối bằng AND: customer_id IN (SELECT customer_id FROM accounts) và customer_id IN (SELECT customer_id FROM loans).",
   },
   {
     id: 'e90',
@@ -1063,7 +1065,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT b.branch_name, SUM(a.balance) AS tong\nFROM accounts a\nJOIN branches b ON ...\nGROUP BY b.branch_name\nORDER BY ...\nLIMIT 1;',
     solutionSql: 'SELECT b.branch_name, SUM(a.balance) AS tong FROM accounts a JOIN branches b ON b.branch_id = a.branch_id GROUP BY b.branch_name ORDER BY tong DESC LIMIT 1',
     orderMatters: true,
-    hint: 'GROUP BY, ORDER BY tong DESC, LIMIT 1.',
+    hint: "JOIN accounts với branches bằng branch_id, SUM(balance) AS tong, GROUP BY branch_name. Dòng lớn nhất là ORDER BY tong DESC LIMIT 1.",
   },
   {
     id: 'e91',
@@ -1075,7 +1077,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT txn_id, amount\nFROM transactions\nORDER BY ...\nLIMIT 5;',
     solutionSql: 'SELECT txn_id, amount FROM transactions ORDER BY amount DESC LIMIT 5',
     orderMatters: true,
-    hint: 'ORDER BY amount DESC LIMIT 5.',
+    hint: "Lấy txn_id và amount từ transactions. ORDER BY amount DESC LIMIT 5. Bài này chấm cả thứ tự.",
   },
   {
     id: 'e92',
@@ -1087,7 +1089,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, account_type, balance\nFROM accounts a\nWHERE ...;',
     solutionSql: 'SELECT account_number, account_type, balance FROM accounts a WHERE balance > (SELECT AVG(balance) FROM accounts a2 WHERE a2.account_type = a.account_type)',
     orderMatters: false,
-    hint: 'Truy vấn con tương quan: a2.account_type = a.account_type.',
+    hint: "Đặt bí danh a cho bảng ngoài. Truy vấn con tính AVG(balance) từ accounts a2, với điều kiện a2.account_type = a.account_type để chỉ lấy cùng loại với dòng đang xét.",
   },
   {
     id: 'e93',
@@ -1099,7 +1101,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT c.full_name, SUM(a.balance) AS tong\nFROM customers c\nJOIN accounts a ON ...\nGROUP BY c.full_name\nHAVING ...;',
     solutionSql: 'SELECT c.full_name, SUM(a.balance) AS tong FROM customers c JOIN accounts a ON a.customer_id = c.customer_id GROUP BY c.full_name HAVING SUM(a.balance) > 200000000',
     orderMatters: false,
-    hint: 'HAVING SUM(a.balance) > 200000000.',
+    hint: "JOIN customers với accounts bằng customer_id, SUM(a.balance) AS tong, GROUP BY full_name. HAVING SUM(a.balance) > 200000000.",
   },
   {
     id: 'e94',
@@ -1111,7 +1113,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly\nFROM employees e\nJOIN employees m ON ...;',
     solutionSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly FROM employees e JOIN employees m ON m.employee_id = e.manager_id',
     orderMatters: false,
-    hint: 'JOIN employees với chính nó: m.employee_id = e.manager_id.',
+    hint: "Dùng bảng employees hai lần: e là nhân viên, m là quản lý. JOIN khi m.employee_id = e.manager_id. Đặt tên cột bằng AS nhan_vien và AS quan_ly.",
   },
   {
     id: 'e95',
@@ -1123,7 +1125,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly\nFROM employees e\nLEFT JOIN employees m ON ...;',
     solutionSql: 'SELECT e.full_name AS nhan_vien, m.full_name AS quan_ly FROM employees e LEFT JOIN employees m ON m.employee_id = e.manager_id',
     orderMatters: false,
-    hint: 'LEFT JOIN giữ lại cả nhân viên không có quản lý.',
+    hint: "Giống bài nối nhân viên với quản lý, nhưng dùng LEFT JOIN thay cho JOIN. Nhân viên không có manager_id vẫn còn trong kết quả, cột quản lý để trống.",
   },
   {
     id: 'e96',
@@ -1135,7 +1137,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'WITH bt AS (\n  ...\n)\nSELECT branch_name, tong\nFROM bt\nWHERE ...;',
     solutionSql: 'WITH bt AS (SELECT b.branch_name AS branch_name, SUM(a.balance) AS tong FROM accounts a JOIN branches b ON b.branch_id = a.branch_id GROUP BY b.branch_name) SELECT branch_name, tong FROM bt WHERE tong > (SELECT AVG(tong) FROM bt)',
     orderMatters: false,
-    hint: 'Định nghĩa CTE bt rồi so sánh với AVG(tong) của chính bt.',
+    hint: "WITH bt AS (...) tính sẵn branch_name và tong của từng chi nhánh. Câu SELECT phía sau đọc từ bt và lọc tong > (SELECT AVG(tong) FROM bt).",
   },
   {
     id: 'e97',
@@ -1147,7 +1149,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance,\n       ROW_NUMBER() OVER (...) AS hang\nFROM accounts;',
     solutionSql: 'SELECT account_number, balance, ROW_NUMBER() OVER (ORDER BY balance DESC) AS hang FROM accounts',
     orderMatters: false,
-    hint: 'ROW_NUMBER() OVER (ORDER BY balance DESC).',
+    hint: "ROW_NUMBER() đánh số 1, 2, 3... OVER (ORDER BY balance DESC) xếp số dư cao lên trước. Đặt tên cột là hang.",
   },
   {
     id: 'e98',
@@ -1159,7 +1161,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, account_type, balance,\n       RANK() OVER (...) AS hang\nFROM accounts;',
     solutionSql: 'SELECT account_number, account_type, balance, RANK() OVER (PARTITION BY account_type ORDER BY balance DESC) AS hang FROM accounts',
     orderMatters: false,
-    hint: 'RANK() OVER (PARTITION BY account_type ORDER BY balance DESC).',
+    hint: "RANK() OVER (PARTITION BY account_type ORDER BY balance DESC). PARTITION BY bắt đầu lại thứ hạng trong từng loại tài khoản.",
   },
   {
     id: 'e99',
@@ -1171,7 +1173,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT txn_id, txn_date, amount,\n       ... AS luy_ke\nFROM transactions\nWHERE ...;',
     solutionSql: 'SELECT txn_id, txn_date, amount, SUM(amount) OVER (ORDER BY txn_date, txn_id) AS luy_ke FROM transactions WHERE account_id = 1',
     orderMatters: false,
-    hint: 'SUM(amount) OVER (ORDER BY txn_date, txn_id).',
+    hint: "Lọc WHERE account_id = 1. Cột lũy kế là SUM(amount) OVER (ORDER BY txn_date, txn_id): cộng dồn theo đúng thứ tự đó.",
   },
   {
     id: 'e100',
@@ -1183,7 +1185,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT account_number, balance\nFROM accounts\nWHERE ...\nORDER BY ...\nLIMIT 5;',
     solutionSql: "SELECT account_number, balance FROM accounts WHERE currency = 'VND' ORDER BY balance DESC LIMIT 5",
     orderMatters: true,
-    hint: "Lọc currency = 'VND' trước, rồi ORDER BY balance DESC LIMIT 5.",
+    hint: "Lọc trước: WHERE currency = 'VND'. Sau đó ORDER BY balance DESC LIMIT 5.",
   },
   {
     id: 'e101',
@@ -1195,7 +1197,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ...\nUNION\nSELECT ...;',
     solutionSql: 'SELECT city FROM customers UNION SELECT city FROM branches',
     orderMatters: false,
-    hint: 'UNION tự loại trùng giữa hai tập kết quả.',
+    hint: "Viết hai câu SELECT city, một từ customers và một từ branches, nối bằng UNION. UNION tự bỏ thành phố trùng.",
   },
   {
     id: 'e102',
@@ -1207,7 +1209,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT txn_id, amount\nFROM transactions\nWHERE ...;',
     solutionSql: 'SELECT txn_id, amount FROM transactions WHERE amount > (SELECT AVG(amount) FROM transactions)',
     orderMatters: false,
-    hint: 'So sánh amount với (SELECT AVG(amount) FROM transactions).',
+    hint: "WHERE amount > (SELECT AVG(amount) FROM transactions). Truy vấn con tính mức trung bình của mọi giao dịch.",
   },
   {
     id: 'e103',
@@ -1219,7 +1221,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT c.full_name, COUNT(*) AS so_tk, SUM(a.balance) AS tong\nFROM customers c\nJOIN accounts a ON ...\nGROUP BY c.full_name\nHAVING ...;',
     solutionSql: 'SELECT c.full_name, COUNT(*) AS so_tk, SUM(a.balance) AS tong FROM customers c JOIN accounts a ON a.customer_id = c.customer_id GROUP BY c.full_name HAVING COUNT(*) > 1 AND SUM(a.balance) > 100000000',
     orderMatters: false,
-    hint: 'HAVING COUNT(*) > 1 AND SUM(a.balance) > 100000000.',
+    hint: "JOIN customers với accounts, GROUP BY full_name. HAVING cần cả hai việc: COUNT(*) > 1 và SUM(a.balance) > 100000000, nối bằng AND.",
   },
   {
     id: 'e104',
@@ -1231,7 +1233,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT b.branch_name, COUNT(*) AS tong_tk,\n       ... AS tk_hoat_dong\nFROM accounts a\nJOIN branches b ON ...\nGROUP BY b.branch_name;',
     solutionSql: "SELECT b.branch_name, COUNT(*) AS tong_tk, SUM(CASE WHEN a.status = 'ACTIVE' THEN 1 ELSE 0 END) AS tk_hoat_dong FROM accounts a JOIN branches b ON b.branch_id = a.branch_id GROUP BY b.branch_name",
     orderMatters: false,
-    hint: 'Kết hợp COUNT(*) và SUM(CASE WHEN ...).',
+    hint: "JOIN accounts với branches bằng branch_id. tong_tk là COUNT(*). tk_hoat_dong là SUM(CASE WHEN status = 'ACTIVE' THEN 1 ELSE 0 END). GROUP BY branch_name.",
   },
   {
     id: 'e105',
@@ -1243,7 +1245,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT loan_id, loan_type, interest_rate\nFROM loans\nWHERE ...;',
     solutionSql: 'SELECT loan_id, loan_type, interest_rate FROM loans WHERE interest_rate > (SELECT AVG(interest_rate) FROM loans)',
     orderMatters: false,
-    hint: 'So sánh với (SELECT AVG(interest_rate) FROM loans).',
+    hint: "WHERE interest_rate > (SELECT AVG(interest_rate) FROM loans). Truy vấn con trả về lãi suất trung bình.",
   },
   {
     id: 'e106',
@@ -1255,7 +1257,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT c.full_name, COUNT(a.account_id) AS so_tk\nFROM customers c\nLEFT JOIN accounts a ON ...\nGROUP BY c.full_name;',
     solutionSql: 'SELECT c.full_name, COUNT(a.account_id) AS so_tk FROM customers c LEFT JOIN accounts a ON a.customer_id = c.customer_id GROUP BY c.full_name',
     orderMatters: false,
-    hint: 'Dùng COUNT(a.account_id) (không phải COUNT(*)) để khách không có tài khoản ra 0.',
+    hint: "FROM customers LEFT JOIN accounts bằng customer_id để khách chưa có tài khoản vẫn còn. Đếm COUNT(a.account_id), không dùng COUNT(*), rồi GROUP BY full_name.",
   },
   {
     id: 'e107',
@@ -1267,7 +1269,7 @@ const exerciseBank: Exercise[] = [
     starterSql: "SELECT strftime('%Y-%m', txn_date) AS thang, SUM(amount) AS tong_nap\nFROM transactions\nWHERE txn_type = 'DEPOSIT'\nGROUP BY ...;",
     solutionSql: "SELECT strftime('%Y-%m', txn_date) AS thang, SUM(amount) AS tong_nap FROM transactions WHERE txn_type = 'DEPOSIT' GROUP BY strftime('%Y-%m', txn_date)",
     orderMatters: false,
-    hint: "Lọc txn_type = 'DEPOSIT' rồi GROUP BY theo tháng.",
+    hint: "WHERE txn_type = 'DEPOSIT' lọc trước khi nhóm. Tháng là strftime('%Y-%m', txn_date), SUM(amount) AS tong_nap, GROUP BY đúng biểu thức tháng.",
   },
   {
     id: 'e108',
@@ -1279,7 +1281,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT a.account_number, COUNT(*) AS so_gd\nFROM transactions t\nJOIN accounts a ON ...\nGROUP BY a.account_number\nORDER BY ...;',
     solutionSql: 'SELECT a.account_number, COUNT(*) AS so_gd FROM transactions t JOIN accounts a ON a.account_id = t.account_id GROUP BY a.account_number ORDER BY so_gd DESC, a.account_number ASC',
     orderMatters: true,
-    hint: 'ORDER BY so_gd DESC, a.account_number ASC.',
+    hint: "JOIN transactions với accounts bằng account_id, COUNT(*) AS so_gd, GROUP BY account_number. ORDER BY so_gd DESC, rồi account_number ASC khi số giao dịch bằng nhau.",
   },
   {
     id: 'e109',
@@ -1290,7 +1292,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT branch_name\nFROM branches\nWHERE ...;',
     solutionSql: 'SELECT branch_name FROM branches WHERE branch_id NOT IN (SELECT branch_id FROM loans)',
     orderMatters: false,
-    hint: 'NOT IN (SELECT branch_id FROM loans).',
+    hint: "Lấy branch_name từ branches. Chi nhánh chưa cho vay là branch_id NOT IN (SELECT branch_id FROM loans).",
   },
   {
     id: 'e110',
@@ -1302,7 +1304,7 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT c.full_name\nFROM customers c\nWHERE ...;',
     solutionSql: "SELECT c.full_name FROM customers c WHERE NOT EXISTS (SELECT 1 FROM accounts a JOIN transactions t ON t.account_id = a.account_id WHERE a.customer_id = c.customer_id AND t.txn_type = 'WITHDRAWAL')",
     orderMatters: false,
-    hint: 'NOT EXISTS với truy vấn con nối accounts và transactions theo customer_id.',
+    hint: "NOT EXISTS bọc một truy vấn con: nối accounts với transactions, khớp customer_id của khách bên ngoài, và txn_type = 'WITHDRAWAL'. Không có dòng nào khớp thì khách đó chưa từng rút tiền.",
   },
   {
     id: 'e111',
@@ -1314,12 +1316,12 @@ const exerciseBank: Exercise[] = [
     starterSql: 'SELECT ... AS so_kh,\n       ... AS so_tk,\n       ... AS tong_so_du;',
     solutionSql: 'SELECT (SELECT COUNT(*) FROM customers) AS so_kh, (SELECT COUNT(*) FROM accounts) AS so_tk, (SELECT SUM(balance) FROM accounts) AS tong_so_du',
     orderMatters: false,
-    hint: 'Mỗi giá trị là một truy vấn con vô hướng trong SELECT.',
+    hint: "Không lấy từ một bảng. Mỗi cột là một truy vấn con trong ngoặc: COUNT khách, COUNT tài khoản, SUM(balance), mỗi cái có AS tên cột.",
   },
 ];
 
 /** Dễ → Trung bình → Khó. Cùng mức giữ nguyên thứ tự khai báo. */
-export const EXERCISES: Exercise[] = [...exerciseBank].sort(
+export const EXERCISES: Exercise[] = [...exerciseBank, ...EXTRA_EXERCISES].sort(
   (a, b) => difficultyRank[a.difficulty] - difficultyRank[b.difficulty],
 );
 
